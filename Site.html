@@ -5,288 +5,359 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Intranet EcoTech Solutions</title>
     <style>
-        /* --- RESET & BASE --- */
+        /* --- CHARTE GRAPHIQUE ECOTECH --- */
         :root {
-            --primary-color: #2E7D32; /* Vert EcoTech */
-            --secondary-color: #2c3e50; /* Bleu Gris Tech */
-            --accent-color: #f1f8e9; /* Vert très clair fond */
-            --text-color: #333;
+            --primary: #2E7D32;      /* Vert Corporate */
+            --primary-dark: #1B5E20;
+            --secondary: #37474F;    /* Gris Anthracite */
+            --bg-color: #F1F8E9;     /* Fond très clair */
             --white: #ffffff;
-            --shadow: 0 4px 6px rgba(0,0,0,0.1);
-            --radius: 8px;
+            --text: #333;
+            --danger: #d32f2f;       /* Rouge pour alertes */
+            --info: #0288d1;         /* Bleu pour infos */
+            --shadow: 0 4px 12px rgba(0,0,0,0.1);
+            --radius: 10px;
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #eef2f5;
-            margin: 0;
-            padding: 0;
-            color: var(--text-color);
+            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            margin: 0; padding: 0;
+            color: var(--text);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* --- HEADER --- */
+        /* --- HEADER FIXE --- */
         header {
             background-color: var(--white);
-            border-bottom: 3px solid var(--primary-color);
-            padding: 15px 40px;
+            border-bottom: 4px solid var(--primary);
+            padding: 0 30px;
+            height: 70px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             box-shadow: var(--shadow);
+            z-index: 100;
         }
-
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        /* Si tu as le fichier logo, remplace le texte par <img src="logo.png"> */
-        .logo-text {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--secondary-color);
-        }
-        .logo-text span { color: var(--primary-color); }
-
-        .user-profile {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 14px;
-        }
-        .avatar {
-            width: 35px; height: 35px;
-            background-color: var(--secondary-color);
-            color: white;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            font-weight: bold;
-        }
+        .logo { font-size: 24px; font-weight: bold; color: var(--secondary); display: flex; align-items: center; gap: 10px;}
+        .logo span { color: var(--primary); }
+        .user-info { display: flex; align-items: center; gap: 15px; font-size: 14px; }
+        .badge { background: var(--primary); color: white; padding: 5px 10px; border-radius: 20px; font-size: 12px; }
 
         /* --- LAYOUT PRINCIPAL --- */
-        .container {
-            max-width: 1200px;
-            margin: 30px auto;
-            display: grid;
-            grid-template-columns: 250px 1fr 300px; /* Sidebar - Main - Widgets */
-            gap: 25px;
-            padding: 0 20px;
+        .main-container {
+            display: flex;
+            flex: 1;
+            overflow: hidden; /* Empêche le scroll global */
         }
 
-        /* --- SIDEBAR GAUCHE (MENU) --- */
-        .sidebar-menu {
-            background: var(--white);
-            padding: 20px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-        }
-        .menu-item {
-            display: block;
-            padding: 12px;
-            margin-bottom: 5px;
-            text-decoration: none;
-            color: var(--text-color);
-            border-radius: 5px;
-            transition: 0.3s;
-        }
-        .menu-item:hover, .menu-item.active {
-            background-color: var(--accent-color);
-            color: var(--primary-color);
-            font-weight: bold;
-        }
-        .menu-title {
-            text-transform: uppercase;
-            font-size: 12px;
-            color: #888;
-            margin-bottom: 10px;
-            margin-top: 20px;
-        }
-        .menu-title:first-child { margin-top: 0; }
-
-        /* --- CONTENU CENTRAL (NEWS) --- */
-        .main-content {
+        /* --- SIDEBAR (MENU) --- */
+        aside {
+            width: 260px;
+            background: var(--secondary);
+            color: white;
             display: flex;
             flex-direction: column;
-            gap: 20px;
+            padding-top: 20px;
         }
-
-        .welcome-banner {
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+        .nav-btn {
+            background: none; border: none;
+            color: #cfd8dc;
+            padding: 15px 25px;
+            text-align: left;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex; align-items: center; gap: 10px;
+        }
+        .nav-btn:hover, .nav-btn.active {
+            background-color: var(--primary);
             color: white;
-            padding: 30px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
+            border-left: 5px solid var(--white);
         }
-        .welcome-banner h1 { margin: 0 0 10px 0; }
+        .server-info-box {
+            margin-top: auto;
+            padding: 20px;
+            font-size: 12px;
+            background: rgba(0,0,0,0.2);
+            color: #aaa;
+        }
 
+        /* --- CONTENU DYNAMIQUE --- */
+        main {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto; /* Scroll uniquement ici */
+        }
+
+        /* Sections cachées par défaut */
+        .page-section { display: none; animation: fadeIn 0.4s; }
+        .page-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* --- CARTES & WIDGETS --- */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+        }
         .card {
             background: var(--white);
-            padding: 20px;
             border-radius: var(--radius);
+            padding: 25px;
             box-shadow: var(--shadow);
+            margin-bottom: 25px;
         }
-        .card h3 { margin-top: 0; border-bottom: 2px solid var(--accent-color); padding-bottom: 10px; color: var(--secondary-color); }
+        h2 { margin-top: 0; color: var(--secondary); border-bottom: 2px solid var(--bg-color); padding-bottom: 10px; }
+        
+        /* News Styling */
+        .news-item { display: flex; gap: 15px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+        .news-date { 
+            background: var(--bg-color); color: var(--primary); 
+            padding: 10px; border-radius: 8px; text-align: center; min-width: 60px; font-weight: bold;
+            display: flex; flex-direction: column; justify-content: center;
+        }
+        .news-content h4 { margin: 0 0 5px 0; color: var(--secondary); }
+        .tag { padding: 3px 8px; border-radius: 4px; font-size: 11px; text-transform: uppercase; font-weight: bold; color: white;}
+        .tag.urgent { background: var(--danger); }
+        .tag.info { background: var(--info); }
+        .tag.rh { background: #8e24aa; }
 
-        .news-item {
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid #eee;
-        }
-        .news-date { font-size: 12px; color: #888; }
-        .news-title { font-weight: bold; color: var(--primary-color); display: block; margin-bottom: 5px; }
-
-        /* --- SIDEBAR DROITE (WIDGETS) --- */
-        .widgets-column {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        /* CALENDRIER CSS SIMPLE */
-        .calendar {
-            text-align: center;
-        }
-        .month-name {
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: var(--secondary-color);
-        }
-        .days-grid {
+        /* Calendar Styling */
+        .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 5px;
-            font-size: 12px;
-        }
-        .day-name { font-weight: bold; color: #888; }
-        .day {
-            padding: 5px;
-            background: #f9f9f9;
-            border-radius: 3px;
-        }
-        .day.today {
-            background-color: var(--primary-color);
-            color: white;
-            font-weight: bold;
-        }
-
-        .server-status ul { list-style: none; padding: 0; }
-        .server-status li { margin-bottom: 8px; font-size: 13px; display: flex; justify-content: space-between; }
-        .status-ok { color: green; font-weight: bold; }
-
-        /* --- FOOTER --- */
-        footer {
             text-align: center;
-            padding: 20px;
-            font-size: 12px;
-            color: #666;
-            margin-top: 40px;
+            font-size: 14px;
         }
+        .cal-head { font-weight: bold; color: #888; padding-bottom: 10px;}
+        .cal-day { 
+            padding: 10px; border-radius: 5px; background: #fafafa; position: relative;
+        }
+        .cal-day.today { background: var(--secondary); color: white; font-weight: bold; }
+        .cal-day.event { border: 1px solid var(--primary); color: var(--primary); font-weight: bold; cursor: pointer; }
+        .cal-day.event:hover { background: var(--primary); color: white; }
+        
+        /* Formulaire Support */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;
+        }
+        .btn-submit { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
 
-        /* --- RESPONSIVE --- */
-        @media (max-width: 800px) {
-            .container { grid-template-columns: 1fr; }
-            .sidebar-menu, .widgets-column { order: 2; }
-            .main-content { order: 1; }
-        }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo-area">
-            <div class="logo-text">EcoTech <span>Solutions</span></div>
+        <div class="logo">
+            EcoTech <span>Solutions</span>
         </div>
-        <div class="user-profile">
-            <span>Bonjour, <strong>Collaborateur</strong></span>
-            <div class="avatar">C</div>
+        <div class="user-info">
+            <span id="horloge">12:00</span>
+            <span class="badge">VLAN 220</span>
+            <div style="width:35px; height:35px; background:#ccc; border-radius:50%; display:flex; justify-content:center; align-items:center;">R</div>
         </div>
     </header>
 
-    <div class="container">
-        <aside class="sidebar-menu">
-            <div class="menu-title">Navigation</div>
-            <a href="#" class="menu-item active">🏠 Accueil</a>
-            <a href="#" class="menu-item">📂 Documents Partagés (VLAN 220)</a>
-            <a href="#" class="menu-item">👤 Annuaire Interne</a>
-            <a href="#" class="menu-item">📅 Planning Équipes</a>
+    <div class="main-container">
+        <aside>
+            <button class="nav-btn active" onclick="showPage('accueil')">🏠 Accueil</button>
+            <button class="nav-btn" onclick="showPage('planning')">📅 Planning & Événements</button>
+            <button class="nav-btn" onclick="showPage('documents')">📂 Documents Partagés</button>
+            <button class="nav-btn" onclick="showPage('support')">🛠 Support DSI</button>
             
-            <div class="menu-title">Services</div>
-            <a href="#" class="menu-item">🛠 Support DSI (Ticket)</a>
-            <a href="#" class="menu-item">⚖️ Ressources Humaines</a>
-            <a href="#" class="menu-item">🌐 Site Public (Ext)</a>
+            <div class="server-info-box">
+                SRV: ECO-BDX-EX07<br>
+                IP: 10.20.20.7<br>
+                OS: Debian 12<br>
+                UPTIME: 99.9%
+            </div>
         </aside>
 
-        <section class="main-content">
-            <div class="welcome-banner">
-                <h1>Bienvenue sur l'Intranet</h1>
-                <p>Votre portail unique pour accéder aux ressources d'EcoTech Solutions.</p>
-            </div>
-
-            <div class="card">
-                <h3>📢 Actualités de l'entreprise</h3>
-                
-                <div class="news-item">
-                    <span class="news-date">02 Février 2026</span>
-                    <span class="news-title">Nouveau serveur de fichiers disponible</span>
-                    <p>Le stockage partagé est désormais accessible sur les lecteurs I: et J:. Pensez à redémarrer vos sessions.</p>
-                </div>
-
-                <div class="news-item">
-                    <span class="news-date">30 Janvier 2026</span>
-                    <span class="news-title">Maintenance Infrastructure</span>
-                    <p>Une maintenance des switchs VLAN 610 aura lieu ce vendredi à 18h. Coupure réseau possible.</p>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>🚀 Accès Rapides</h3>
-                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-                    <button style="padding: 10px 20px; background: var(--secondary-color); color: white; border: none; border-radius: 5px; cursor: pointer;">📧 Webmail</button>
-                    <button style="padding: 10px 20px; background: var(--secondary-color); color: white; border: none; border-radius: 5px; cursor: pointer;">☁️ NextCloud</button>
-                    <button style="padding: 10px 20px; background: var(--secondary-color); color: white; border: none; border-radius: 5px; cursor: pointer;">🏢 Organigramme</button>
-                </div>
-            </div>
-        </section>
-
-        <aside class="widgets-column">
+        <main>
             
-            <div class="card calendar">
-                <div class="month-name">Février 2026</div>
-                <div class="days-grid">
-                    <div class="day-name">Lu</div><div class="day-name">Ma</div><div class="day-name">Me</div>
-                    <div class="day-name">Je</div><div class="day-name">Ve</div><div class="day-name">Sa</div><div class="day-name">Di</div>
-                    
-                    <div class="day"></div><div class="day"></div><div class="day"></div>
-                    <div class="day"></div><div class="day"></div><div class="day">1</div><div class="day today">2</div>
-                    <div class="day">3</div><div class="day">4</div><div class="day">5</div>
-                    <div class="day">6</div><div class="day">7</div><div class="day">8</div><div class="day">9</div>
-                    <div class="day">10</div><div class="day">11</div><div class="day">12</div>
-                    <div class="day">13</div><div class="day">14</div><div class="day">15</div><div class="day">16</div>
-                    <div class="day">17</div><div class="day">18</div><div class="day">19</div>
-                    <div class="day">20</div><div class="day">21</div><div class="day">22</div><div class="day">23</div>
-                     <div class="day">24</div><div class="day">25</div><div class="day">26</div>
-                     <div class="day">27</div><div class="day">28</div><div class="day"></div><div class="day"></div>
+            <div id="accueil" class="page-section active">
+                <div class="dashboard-grid">
+                    <div>
+                        <div class="card" style="background: linear-gradient(135deg, #2E7D32, #1B5E20); color: white;">
+                            <h1 style="margin:0; border:none; color:white;">Bienvenue, Romain</h1>
+                            <p>Voici les dernières informations du réseau EcoTech.</p>
+                        </div>
+
+                        <div class="card">
+                            <h2>📢 Actualités Récentes</h2>
+                            
+                            <div class="news-item">
+                                <div class="news-date">03<span>FEV</span></div>
+                                <div class="news-content">
+                                    <h4><span class="tag urgent">Urgent</span> Maintenance Firewall</h4>
+                                    <p>Une coupure du pare-feu pfSense est prévue ce soir à 18h00 pour mise à jour de sécurité.</p>
+                                </div>
+                            </div>
+
+                            <div class="news-item">
+                                <div class="news-date">01<span>FEV</span></div>
+                                <div class="news-content">
+                                    <h4><span class="tag info">Projet</span> Lancement du Sprint 3</h4>
+                                    <p>L'équipe IT commence la mise en place des serveurs Web et de la supervision. Bon courage à tous !</p>
+                                </div>
+                            </div>
+
+                            <div class="news-item">
+                                <div class="news-date">28<span>JAN</span></div>
+                                <div class="news-content">
+                                    <h4><span class="tag rh">RH</span> Arrivée de nouveaux collaborateurs</h4>
+                                    <p>Bienvenue à Julie (Compta) et Marc (Service Commercial) qui nous rejoignent cette semaine.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="card">
+                            <h2>🔗 Accès Rapides</h2>
+                            <ul style="list-style: none; padding: 0; line-height: 2;">
+                                <li>👉 <a href="#">Webmail Outlook</a></li>
+                                <li>👉 <a href="#">Portail RH (Congés)</a></li>
+                                <li>👉 <a href="#">Documentation Technique</a></li>
+                                <li>👉 <a href="#">Site Public (www)</a></li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h2>🌤 État des Services</h2>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                                <span>Internet</span> <span style="color:green; font-weight:bold;">OK</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                                <span>VPN Nantes</span> <span style="color:green; font-weight:bold;">OK</span>
+                            </div>
+                            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                                <span>Serveur Fichiers</span> <span style="color:orange; font-weight:bold;">Lent</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="card server-status">
-                <h3>🖥 Info Serveur</h3>
-                <ul>
-                    <li>Nom : <strong>ECO-BDX-EX07</strong></li>
-                    <li>IP : <strong>10.20.20.7</strong></li>
-                    <li>VLAN : <strong>220 (Infra)</strong></li>
-                    <li>État Apache : <span class="status-ok">✔ Online</span></li>
-                    <li>État SSH : <span class="status-ok">✔ Sécurisé</span></li>
-                </ul>
+            <div id="planning" class="page-section">
+                <div class="card">
+                    <h2>📅 Calendrier - Février 2026</h2>
+                    <p>Survolez les dates encadrées pour voir les détails.</p>
+                    <div class="calendar-grid">
+                        <div class="cal-head">Lun</div><div class="cal-head">Mar</div><div class="cal-head">Mer</div><div class="cal-head">Jeu</div><div class="cal-head">Ven</div><div class="cal-head">Sam</div><div class="cal-head">Dim</div>
+                        
+                        <div></div><div></div><div></div><div></div><div></div><div></div>
+                        <div class="cal-day">1</div>
+                        
+                        <div class="cal-day event" title="9h00 : Réunion Projet IT">2</div>
+                        <div class="cal-day today">3</div>
+                        <div class="cal-day">4</div>
+                        <div class="cal-day event" title="14h00 : Audit Sécurité">5</div>
+                        <div class="cal-day">6</div>
+                        <div class="cal-day">7</div>
+                        <div class="cal-day">8</div>
+
+                        <div class="cal-day">9</div>
+                        <div class="cal-day event" title="Formation pfSense">10</div>
+                        <div class="cal-day">11</div>
+                        <div class="cal-day">12</div>
+                        <div class="cal-day event" title="Déjeuner d'équipe">13</div>
+                        <div class="cal-day">14</div>
+                        <div class="cal-day">15</div>
+
+                        <div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day">22</div>
+                        <div class="cal-day">23</div><div class="cal-day">24</div><div class="cal-day">25</div><div class="cal-day">26</div><div class="cal-day event" title="FIN DU SPRINT 3 !">27</div><div class="cal-day">28</div><div></div>
+                    </div>
+                </div>
             </div>
-        </aside>
+
+            <div id="documents" class="page-section">
+                <div class="card">
+                    <h2>📂 Explorateur de Fichiers (Simulation)</h2>
+                    <p>Accès direct aux partages réseau (Lecteurs I: et J:).</p>
+                    <table style="width:100%; border-collapse:collapse;">
+                        <tr style="background:#eee; text-align:left;">
+                            <th style="padding:10px;">Nom</th>
+                            <th>Date</th>
+                            <th>Taille</th>
+                            <th>Action</th>
+                        </tr>
+                        <tr style="border-bottom:1px solid #eee;">
+                            <td style="padding:10px;">📄 Procédure_VPN.pdf</td>
+                            <td>02/02/2026</td>
+                            <td>1.2 Mo</td>
+                            <td><a href="#">Télécharger</a></td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #eee;">
+                            <td style="padding:10px;">📊 Budget_DSI_2026.xlsx</td>
+                            <td>28/01/2026</td>
+                            <td>45 Ko</td>
+                            <td><a href="#">Télécharger</a></td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #eee;">
+                            <td style="padding:10px;">🖼️ Logo_EcoTech_HD.png</td>
+                            <td>15/01/2026</td>
+                            <td>2.4 Mo</td>
+                            <td><a href="#">Télécharger</a></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <div id="support" class="page-section">
+                <div class="card">
+                    <h2>🛠 Ouvrir un ticket incident</h2>
+                    <p>Un problème informatique ? Remplissez ce formulaire pour alerter l'équipe.</p>
+                    <form onsubmit="alert('Votre ticket a été envoyé au serveur ! (Simulation)'); return false;">
+                        <div class="form-group">
+                            <label>Votre Service</label>
+                            <select><option>DSI</option><option>RH</option><option>Compta</option><option>Commercial</option></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Priorité</label>
+                            <select><option>Basse</option><option>Moyenne</option><option style="color:red;">Haute (Bloquant)</option></select>
+                        </div>
+                        <div class="form-group">
+                            <label>Description du problème</label>
+                            <textarea rows="5" placeholder="Décrivez votre panne..."></textarea>
+                        </div>
+                        <button type="submit" class="btn-submit">Envoyer le Ticket</button>
+                    </form>
+                </div>
+            </div>
+
+        </main>
     </div>
 
-    <footer>
-        <p>&copy; 2026 EcoTech Solutions - Service Informatique Interne<br>
-        Pour toute assistance, contactez le helpdesk au 05.57.XX.XX.XX</p>
-    </footer>
+    <script>
+        // Fonction pour changer de page sans recharger
+        function showPage(pageId) {
+            // 1. Cacher toutes les sections
+            const sections = document.querySelectorAll('.page-section');
+            sections.forEach(sec => sec.classList.remove('active'));
+
+            // 2. Enlever la classe active des boutons
+            const buttons = document.querySelectorAll('.nav-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+
+            // 3. Afficher la section demandée
+            document.getElementById(pageId).classList.add('active');
+
+            // 4. Mettre le bouton en surbrillance (Astuce simple)
+            event.target.classList.add('active');
+        }
+
+        // Petite horloge dynamique
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('horloge').textContent = now.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
+        }, 1000);
+    </script>
 
 </body>
 </html>
