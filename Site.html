@@ -4,24 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Intranet EcoTech Solutions</title>
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600&display=swap" rel="stylesheet">
     <style>
-        /* --- CHARTE GRAPHIQUE ECOTECH --- */
+        /* --- CHARTE GRAPHIQUE DARK GLASS --- */
         :root {
-            --primary: #2E7D32;      /* Vert Corporate */
-            --primary-dark: #1B5E20;
-            --secondary: #37474F;    /* Gris Anthracite */
-            --bg-color: #F1F8E9;     /* Fond très clair */
-            --white: #ffffff;
-            --text: #333;
-            --danger: #d32f2f;       /* Rouge pour alertes */
-            --info: #0288d1;         /* Bleu pour infos */
-            --shadow: 0 4px 12px rgba(0,0,0,0.1);
-            --radius: 10px;
+            --primary: #2E7D32;       /* Vert EcoTech */
+            --primary-glow: #4caf50;  /* Vert lumineux */
+            --bg-dark: #1b1f22;       /* Fond sombre */
+            --glass-bg: rgba(30, 30, 35, 0.90); /* Effet Verre (un peu plus opaque) */
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text: #ffffff;
+            --text-muted: #b0b0b0;
+            --danger: #ef5350;
+            --info: #29b6f6;
+            --radius: 4px;
         }
 
         body {
-            font-family: 'Segoe UI', Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
+            font-family: 'Source Sans Pro', sans-serif;
+            background-color: var(--bg-dark);
+            /* background-image: url('images/bg.jpg'); */ /* Décommente si tu as une image */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
             margin: 0; padding: 0;
             color: var(--text);
             height: 100vh;
@@ -29,154 +34,198 @@
             flex-direction: column;
         }
 
-        /* --- HEADER FIXE --- */
+        /* Overlay sombre */
+        body::before {
+            content: "";
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: -1;
+        }
+
+        /* --- HEADER --- */
         header {
-            background-color: var(--white);
-            border-bottom: 4px solid var(--primary);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
             padding: 0 30px;
-            height: 70px;
+            height: 60px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: var(--shadow);
             z-index: 100;
         }
-        .logo { font-size: 24px; font-weight: bold; color: var(--secondary); display: flex; align-items: center; gap: 10px;}
-        .logo span { color: var(--primary); }
-        .user-info { display: flex; align-items: center; gap: 15px; font-size: 14px; }
-        .badge { background: var(--primary); color: white; padding: 5px 10px; border-radius: 20px; font-size: 12px; }
+        .logo { font-size: 20px; font-weight: 300; color: var(--text); display: flex; align-items: center; gap: 10px; letter-spacing: 2px; text-transform: uppercase;}
+        .logo span { color: var(--text); font-weight: 600; border-bottom: 2px solid var(--primary); }
+        
+        .user-info { display: flex; align-items: center; gap: 15px; font-size: 13px; color: var(--text-muted); }
+        .badge { background: var(--primary); color: white; padding: 2px 8px; border-radius: 2px; font-size: 11px; font-weight: bold; letter-spacing: 1px; }
 
-        /* --- LAYOUT PRINCIPAL --- */
+        /* --- LAYOUT --- */
         .main-container {
             display: flex;
             flex: 1;
-            overflow: hidden; /* Empêche le scroll global */
+            overflow: hidden;
         }
 
-        /* --- SIDEBAR (MENU) --- */
+        /* --- SIDEBAR --- */
         aside {
-            width: 260px;
-            background: var(--secondary);
-            color: white;
+            width: 240px;
+            background: rgba(0, 0, 0, 0.6);
+            border-right: 1px solid var(--glass-border);
             display: flex;
             flex-direction: column;
             padding-top: 20px;
+            backdrop-filter: blur(5px);
         }
         .nav-btn {
             background: none; border: none;
-            color: #cfd8dc;
+            color: var(--text-muted);
             padding: 15px 25px;
             text-align: left;
-            font-size: 16px;
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             cursor: pointer;
             transition: 0.3s;
             display: flex; align-items: center; gap: 10px;
+            border-right: 3px solid transparent;
         }
         .nav-btn:hover, .nav-btn.active {
-            background-color: var(--primary);
-            color: white;
-            border-left: 5px solid var(--white);
-        }
-        .server-info-box {
-            margin-top: auto;
-            padding: 20px;
-            font-size: 12px;
-            background: rgba(0,0,0,0.2);
-            color: #aaa;
+            color: var(--white);
+            background: rgba(255,255,255,0.05);
+            border-right: 3px solid var(--primary);
         }
 
-        /* --- CONTENU DYNAMIQUE --- */
+        /* --- CONTENU --- */
         main {
             flex: 1;
             padding: 30px;
-            overflow-y: auto; /* Scroll uniquement ici */
+            overflow-y: auto;
         }
 
-        /* Sections cachées par défaut */
-        .page-section { display: none; animation: fadeIn 0.4s; }
+        .page-section { display: none; animation: fadeIn 0.5s; }
         .page-section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* --- CARTES & WIDGETS --- */
+        /* --- CARTES --- */
         .dashboard-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 25px;
         }
         .card {
-            background: var(--white);
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
             border-radius: var(--radius);
             padding: 25px;
-            box-shadow: var(--shadow);
             margin-bottom: 25px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
         }
-        h2 { margin-top: 0; color: var(--secondary); border-bottom: 2px solid var(--bg-color); padding-bottom: 10px; }
-        
-        /* News Styling */
-        .news-item { display: flex; gap: 15px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+        h2 { margin-top: 0; border-bottom: 1px solid var(--glass-border); padding-bottom: 10px; font-size: 1.2em; text-transform: uppercase; letter-spacing: 1px;}
+        h4 { margin: 0 0 5px 0; font-weight: 600; color: var(--white); }
+        p { color: var(--text-muted); font-weight: 300; line-height: 1.6; margin-top: 5px;}
+        a { color: var(--white); text-decoration: none; border-bottom: 1px dotted var(--text-muted); transition: 0.3s; }
+        a:hover { color: var(--primary-glow); border-bottom-color: var(--primary-glow); }
+
+        /* --- STATUS SERVICES --- */
+        .service-row { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .service-row:last-child { border-bottom: none; }
+        .status-dot { height: 8px; width: 8px; border-radius: 50%; display: inline-block; margin-right: 5px; }
+        .online { background-color: #4caf50; box-shadow: 0 0 8px #4caf50; }
+        .slow { background-color: #ff9800; box-shadow: 0 0 8px #ff9800; }
+        .offline { background-color: #f44336; box-shadow: 0 0 8px #f44336; }
+
+        /* --- NEWS --- */
+        .news-item { display: flex; gap: 15px; margin-bottom: 20px; padding-bottom: 20px; border-bottom: 1px solid var(--glass-border); }
+        .news-item:last-child { border-bottom: none; }
         .news-date { 
-            background: var(--bg-color); color: var(--primary); 
-            padding: 10px; border-radius: 8px; text-align: center; min-width: 60px; font-weight: bold;
-            display: flex; flex-direction: column; justify-content: center;
+            background: rgba(255,255,255,0.1); color: var(--white); 
+            padding: 10px; border-radius: 4px; text-align: center; min-width: 50px; 
+            display: flex; flex-direction: column; justify-content: center; font-size: 0.9em;
         }
-        .news-content h4 { margin: 0 0 5px 0; color: var(--secondary); }
-        .tag { padding: 3px 8px; border-radius: 4px; font-size: 11px; text-transform: uppercase; font-weight: bold; color: white;}
+        .news-date span { font-weight: bold; font-size: 1.1em; color: var(--primary-glow); }
+        .tag { padding: 2px 6px; border-radius: 2px; font-size: 10px; text-transform: uppercase; font-weight: bold; color: white; letter-spacing: 1px;}
         .tag.urgent { background: var(--danger); }
         .tag.info { background: var(--info); }
-        .tag.rh { background: #8e24aa; }
+        .tag.rh { background: #ab47bc; }
+        .tag.secu { background: #ff9800; }
+        .tag.biz { background: #009688; }
 
-        /* Calendar Styling */
+        /* --- CALENDRIER DYNAMIQUE --- */
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
             gap: 5px;
             text-align: center;
             font-size: 14px;
+            margin-top: 15px;
         }
-        .cal-head { font-weight: bold; color: #888; padding-bottom: 10px;}
+        .cal-head { font-weight: 600; color: var(--primary-glow); padding-bottom: 10px; text-transform: uppercase; font-size: 12px;}
         .cal-day { 
-            padding: 10px; border-radius: 5px; background: #fafafa; position: relative;
+            height: 50px; /* Plus haut pour afficher le texte */
+            padding: 5px; border-radius: 4px; background: rgba(255,255,255,0.05); color: var(--text-muted); 
+            display: flex; flex-direction: column; justify-content: flex-start; align-items: center;
+            transition: 0.2s; cursor: default;
         }
-        .cal-day.today { background: var(--secondary); color: white; font-weight: bold; }
-        .cal-day.event { border: 1px solid var(--primary); color: var(--primary); font-weight: bold; cursor: pointer; }
-        .cal-day.event:hover { background: var(--primary); color: white; }
+        .cal-day:hover { background: rgba(255,255,255,0.1); color: white; }
+        .cal-day.today { background: var(--primary); color: white; font-weight: bold; box-shadow: 0 0 15px rgba(46, 125, 50, 0.6); }
+        .cal-day.empty { background: transparent; cursor: default; }
         
-        /* Formulaire Support */
-        .form-group { margin-bottom: 15px; }
-        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; }
-        .form-group input, .form-group textarea, .form-group select {
-            width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;
+        /* Texte de l'événement dans la case */
+        .event-label {
+            font-size: 9px; text-transform: uppercase; margin-top: 4px; color: var(--primary-glow); font-weight: bold; line-height: 1.2;
         }
-        .btn-submit { background: var(--primary); color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; }
+        .today .event-label { color: white; }
+        .cal-day.event { border: 1px solid var(--primary); cursor: pointer; }
 
+        /* --- TABLEAUX & FORMULAIRES --- */
+        table { width: 100%; border-collapse: collapse; color: var(--text-muted); }
+        th { text-align: left; padding: 10px; border-bottom: 2px solid var(--glass-border); color: var(--white); text-transform: uppercase; font-size: 0.8em; letter-spacing: 1px; }
+        td { padding: 10px; border-bottom: 1px solid var(--glass-border); }
+        
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; margin-bottom: 8px; font-weight: 600; font-size: 0.9em; letter-spacing: 1px; color: var(--primary-glow); }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%; padding: 12px; 
+            background: rgba(0,0,0,0.3); border: 1px solid var(--glass-border); 
+            color: white; border-radius: 4px; font-family: inherit; box-sizing: border-box;
+        }
+        .btn-submit { 
+            background: transparent; color: var(--white); 
+            border: 1px solid var(--white); padding: 12px 30px; 
+            border-radius: 4px; cursor: pointer; text-transform: uppercase; letter-spacing: 2px; font-weight: 600; transition: 0.3s;
+            width: 100%;
+        }
+        .btn-submit:hover { background: var(--white); color: var(--bg-dark); }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 800px) {
+            .main-container { flex-direction: column; }
+            aside { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--glass-border); padding: 10px; flex-direction: row; overflow-x: auto;}
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .nav-btn { font-size: 12px; padding: 10px; white-space: nowrap;}
+        }
     </style>
 </head>
 <body>
 
     <header>
         <div class="logo">
-            EcoTech <span>Solutions</span>
+            <img src="logo.png" alt="" style="height:30px; margin-right:10px;"> EcoTech <span>Solutions</span>
         </div>
         <div class="user-info">
-            <span id="horloge">12:00</span>
-            <span class="badge">VLAN 220</span>
-            <div style="width:35px; height:35px; background:#ccc; border-radius:50%; display:flex; justify-content:center; align-items:center;">R</div>
+            <span id="horloge">--:--</span>
+            <span class="badge">INTRA</span>
+            <div style="width:30px; height:30px; border: 1px solid var(--text-muted); border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:12px;">R</div>
         </div>
     </header>
 
     <div class="main-container">
         <aside>
-            <button class="nav-btn active" onclick="showPage('accueil')">🏠 Accueil</button>
-            <button class="nav-btn" onclick="showPage('planning')">📅 Planning & Événements</button>
-            <button class="nav-btn" onclick="showPage('documents')">📂 Documents Partagés</button>
-            <button class="nav-btn" onclick="showPage('support')">🛠 Support DSI</button>
-            
-            <div class="server-info-box">
-                SRV: ECO-BDX-EX07<br>
-                IP: 10.20.20.7<br>
-                OS: Debian 12<br>
-                UPTIME: 99.9%
-            </div>
+            <button class="nav-btn active" onclick="showPage('accueil')">Accueil</button>
+            <button class="nav-btn" onclick="showPage('planning')">Planning</button>
+            <button class="nav-btn" onclick="showPage('documents')">Fichiers</button>
+            <button class="nav-btn" onclick="showPage('support')">Support</button>
         </aside>
 
         <main>
@@ -184,60 +233,106 @@
             <div id="accueil" class="page-section active">
                 <div class="dashboard-grid">
                     <div>
-                        <div class="card" style="background: linear-gradient(135deg, #2E7D32, #1B5E20); color: white;">
-                            <h1 style="margin:0; border:none; color:white;">Bienvenue, Romain</h1>
-                            <p>Voici les dernières informations du réseau EcoTech.</p>
+                        <div class="card" style="border-left: 4px solid var(--primary);">
+                            <h1 style="margin:0; text-transform:uppercase; letter-spacing: 3px;">Bonjour, Romain</h1>
+                            <p>Bienvenue sur le portail interne. Votre dernière connexion date d'aujourd'hui.</p>
                         </div>
 
                         <div class="card">
-                            <h2>📢 Actualités Récentes</h2>
+                            <h2>Actualités de l'entreprise</h2>
                             
                             <div class="news-item">
-                                <div class="news-date">03<span>FEV</span></div>
+                                <div class="news-date">04<span>FEV</span></div>
                                 <div class="news-content">
                                     <h4><span class="tag urgent">Urgent</span> Maintenance Firewall</h4>
-                                    <p>Une coupure du pare-feu pfSense est prévue ce soir à 18h00 pour mise à jour de sécurité.</p>
+                                    <p>Une coupure du pare-feu pfSense est planifiée ce soir à 18h00 pour l'application des correctifs de sécurité.</p>
                                 </div>
                             </div>
-
+                            <div class="news-item">
+                                <div class="news-date">02<span>FEV</span></div>
+                                <div class="news-content">
+                                    <h4><span class="tag info">IT</span> Lancement du Sprint 3</h4>
+                                    <p>Déploiement des nouveaux serveurs Web et de l'outil de supervision. Merci de remonter tout incident au support.</p>
+                                </div>
+                            </div>
                             <div class="news-item">
                                 <div class="news-date">01<span>FEV</span></div>
                                 <div class="news-content">
-                                    <h4><span class="tag info">Projet</span> Lancement du Sprint 3</h4>
-                                    <p>L'équipe IT commence la mise en place des serveurs Web et de la supervision. Bon courage à tous !</p>
+                                    <h4><span class="tag biz">Business</span> Nouveau client : GreenEnergy</h4>
+                                    <p>Nous sommes fiers d'annoncer la signature d'un contrat majeur avec GreenEnergy pour l'équipement de leurs datacenters.</p>
+                                </div>
+                            </div>
+                            <div class="news-item">
+                                <div class="news-date">29<span>JAN</span></div>
+                                <div class="news-content">
+                                    <h4><span class="tag rh">RH</span> Campagne d'entretiens annuels</h4>
+                                    <p>Les entretiens annuels débuteront la semaine prochaine. Pensez à remplir votre grille d'auto-évaluation sur le portail RH.</p>
+                                </div>
+                            </div>
+                            <div class="news-item">
+                                <div class="news-date">25<span>JAN</span></div>
+                                <div class="news-content">
+                                    <h4><span class="tag secu">Sécurité</span> Campagne Anti-Phishing</h4>
+                                    <p>Attention aux emails frauduleux demandant vos mots de passe. La DSI ne vous demandera jamais votre mot de passe par email.</p>
                                 </div>
                             </div>
 
-                            <div class="news-item">
-                                <div class="news-date">28<span>JAN</span></div>
-                                <div class="news-content">
-                                    <h4><span class="tag rh">RH</span> Arrivée de nouveaux collaborateurs</h4>
-                                    <p>Bienvenue à Julie (Compta) et Marc (Service Commercial) qui nous rejoignent cette semaine.</p>
-                                </div>
-                            </div>
                         </div>
                     </div>
 
                     <div>
                         <div class="card">
-                            <h2>🔗 Accès Rapides</h2>
-                            <ul style="list-style: none; padding: 0; line-height: 2;">
-                                <li>👉 <a href="#">Webmail Outlook</a></li>
-                                <li>👉 <a href="#">Portail RH (Congés)</a></li>
-                                <li>👉 <a href="#">Documentation Technique</a></li>
-                                <li>👉 <a href="#">Site Public (www)</a></li>
+                            <h2>Accès Rapides</h2>
+                            <ul>
+                                <li><a href="#">&gt; Webmail Outlook</a></li>
+                                <li><a href="#">&gt; Portail RH (Congés & Paie)</a></li>
+                                <li><a href="#">&gt; Documentation Wiki</a></li>
+                                <li><a href="#">&gt; Site Vitrine (Public)</a></li>
+                                <li><a href="#">&gt; Gestion de Projet (Jira)</a></li>
                             </ul>
                         </div>
+
                         <div class="card">
-                            <h2>🌤 État des Services</h2>
-                            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                                <span>Internet</span> <span style="color:green; font-weight:bold;">OK</span>
+                            <h2>État des Services</h2>
+                            
+                            <div class="service-row">
+                                <span>Internet (WAN)</span>
+                                <span style="font-size:12px;"><span class="status-dot online"></span> ONLINE</span>
                             </div>
-                            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                                <span>VPN Nantes</span> <span style="color:green; font-weight:bold;">OK</span>
+                            
+                            <div class="service-row">
+                                <span>VPN Bordeaux (Siège)</span>
+                                <span style="font-size:12px;"><span class="status-dot online"></span> ONLINE</span>
                             </div>
-                            <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
-                                <span>Serveur Fichiers</span> <span style="color:orange; font-weight:bold;">Lent</span>
+
+                            <div class="service-row">
+                                <span>VPN Nantes (Filiale)</span>
+                                <span style="font-size:12px;"><span class="status-dot online"></span> ONLINE</span>
+                            </div>
+
+                            <div class="service-row">
+                                <span>VPN Paris (Studio Dlight)</span>
+                                <span style="font-size:12px;"><span class="status-dot online"></span> ONLINE</span>
+                            </div>
+
+                            <div class="service-row">
+                                <span>Serveur de Fichiers</span>
+                                <span style="font-size:12px;"><span class="status-dot slow"></span> LENT</span>
+                            </div>
+
+                            <div class="service-row">
+                                <span>Messagerie (Exchange)</span>
+                                <span style="font-size:12px;"><span class="status-dot online"></span> ONLINE</span>
+                            </div>
+
+                            <div class="service-row">
+                                <span>Active Directory</span>
+                                <span style="font-size:12px;"><span class="status-dot online"></span> ONLINE</span>
+                            </div>
+
+                            <div class="service-row">
+                                <span>Téléphonie (VoIP)</span>
+                                <span style="font-size:12px;"><span class="status-dot online"></span> ONLINE</span>
                             </div>
                         </div>
                     </div>
@@ -246,64 +341,46 @@
 
             <div id="planning" class="page-section">
                 <div class="card">
-                    <h2>📅 Calendrier - Février 2026</h2>
-                    <p>Survolez les dates encadrées pour voir les détails.</p>
-                    <div class="calendar-grid">
-                        <div class="cal-head">Lun</div><div class="cal-head">Mar</div><div class="cal-head">Mer</div><div class="cal-head">Jeu</div><div class="cal-head">Ven</div><div class="cal-head">Sam</div><div class="cal-head">Dim</div>
-                        
-                        <div></div><div></div><div></div><div></div><div></div><div></div>
-                        <div class="cal-day">1</div>
-                        
-                        <div class="cal-day event" title="9h00 : Réunion Projet IT">2</div>
-                        <div class="cal-day today">3</div>
-                        <div class="cal-day">4</div>
-                        <div class="cal-day event" title="14h00 : Audit Sécurité">5</div>
-                        <div class="cal-day">6</div>
-                        <div class="cal-day">7</div>
-                        <div class="cal-day">8</div>
-
-                        <div class="cal-day">9</div>
-                        <div class="cal-day event" title="Formation pfSense">10</div>
-                        <div class="cal-day">11</div>
-                        <div class="cal-day">12</div>
-                        <div class="cal-day event" title="Déjeuner d'équipe">13</div>
-                        <div class="cal-day">14</div>
-                        <div class="cal-day">15</div>
-
-                        <div class="cal-day">16</div><div class="cal-day">17</div><div class="cal-day">18</div><div class="cal-day">19</div><div class="cal-day">20</div><div class="cal-day">21</div><div class="cal-day">22</div>
-                        <div class="cal-day">23</div><div class="cal-day">24</div><div class="cal-day">25</div><div class="cal-day">26</div><div class="cal-day event" title="FIN DU SPRINT 3 !">27</div><div class="cal-day">28</div><div></div>
-                    </div>
+                    <h2 id="calendar-title">Calendrier</h2>
+                    <p>Planning des événements et réservations de salles.</p>
+                    <div class="calendar-grid" id="calendar-container">
+                        </div>
                 </div>
             </div>
 
             <div id="documents" class="page-section">
                 <div class="card">
-                    <h2>📂 Explorateur de Fichiers (Simulation)</h2>
-                    <p>Accès direct aux partages réseau (Lecteurs I: et J:).</p>
-                    <table style="width:100%; border-collapse:collapse;">
-                        <tr style="background:#eee; text-align:left;">
-                            <th style="padding:10px;">Nom</th>
-                            <th>Date</th>
+                    <h2>Documents Partagés</h2>
+                    <table>
+                        <tr>
+                            <th>Nom du fichier</th>
+                            <th>Modifié le</th>
                             <th>Taille</th>
                             <th>Action</th>
                         </tr>
-                        <tr style="border-bottom:1px solid #eee;">
-                            <td style="padding:10px;">📄 Procédure_VPN.pdf</td>
-                            <td>02/02/2026</td>
+                        <tr>
+                            <td>📄 Procédure_Télétravail_V2.pdf</td>
+                            <td>03/02/2026</td>
                             <td>1.2 Mo</td>
-                            <td><a href="#">Télécharger</a></td>
+                            <td><a href="#">Ouvrir</a></td>
                         </tr>
-                        <tr style="border-bottom:1px solid #eee;">
-                            <td style="padding:10px;">📊 Budget_DSI_2026.xlsx</td>
-                            <td>28/01/2026</td>
-                            <td>45 Ko</td>
-                            <td><a href="#">Télécharger</a></td>
+                        <tr>
+                            <td>📊 Reporting_Janvier_2026.xlsx</td>
+                            <td>01/02/2026</td>
+                            <td>450 Ko</td>
+                            <td><a href="#">Ouvrir</a></td>
                         </tr>
-                        <tr style="border-bottom:1px solid #eee;">
-                            <td style="padding:10px;">🖼️ Logo_EcoTech_HD.png</td>
+                        <tr>
+                            <td>🖼️ Logo_EcoTech_Vectoriel.svg</td>
                             <td>15/01/2026</td>
                             <td>2.4 Mo</td>
-                            <td><a href="#">Télécharger</a></td>
+                            <td><a href="#">Ouvrir</a></td>
+                        </tr>
+                        <tr>
+                            <td>🔐 Politique_Mots_De_Passe.pdf</td>
+                            <td>10/01/2026</td>
+                            <td>800 Ko</td>
+                            <td><a href="#">Ouvrir</a></td>
                         </tr>
                     </table>
                 </div>
@@ -311,22 +388,22 @@
 
             <div id="support" class="page-section">
                 <div class="card">
-                    <h2>🛠 Ouvrir un ticket incident</h2>
-                    <p>Un problème informatique ? Remplissez ce formulaire pour alerter l'équipe.</p>
-                    <form onsubmit="alert('Votre ticket a été envoyé au serveur ! (Simulation)'); return false;">
+                    <h2>Nouveau Ticket</h2>
+                    <p>Utilisez ce formulaire pour signaler un incident technique.</p>
+                    <form onsubmit="alert('Ticket #4290 envoyé au support !'); return false;">
                         <div class="form-group">
-                            <label>Votre Service</label>
-                            <select><option>DSI</option><option>RH</option><option>Compta</option><option>Commercial</option></select>
+                            <label>Service Concerné</label>
+                            <select><option>Infra / Réseau</option><option>Poste de travail</option><option>Logiciel Métier</option></select>
                         </div>
                         <div class="form-group">
                             <label>Priorité</label>
-                            <select><option>Basse</option><option>Moyenne</option><option style="color:red;">Haute (Bloquant)</option></select>
+                            <select><option>Normale</option><option>Urgente</option><option style="color:#ef5350;">Critique (Bloquant)</option></select>
                         </div>
                         <div class="form-group">
-                            <label>Description du problème</label>
-                            <textarea rows="5" placeholder="Décrivez votre panne..."></textarea>
+                            <label>Description de l'incident</label>
+                            <textarea rows="4" placeholder="Détaillez le problème (message d'erreur, logiciel concerné...)..."></textarea>
                         </div>
-                        <button type="submit" class="btn-submit">Envoyer le Ticket</button>
+                        <button type="submit" class="btn-submit">Soumettre le ticket</button>
                     </form>
                 </div>
             </div>
@@ -335,28 +412,91 @@
     </div>
 
     <script>
-        // Fonction pour changer de page sans recharger
+        // 1. Navigation entre les pages
         function showPage(pageId) {
-            // 1. Cacher toutes les sections
-            const sections = document.querySelectorAll('.page-section');
-            sections.forEach(sec => sec.classList.remove('active'));
-
-            // 2. Enlever la classe active des boutons
-            const buttons = document.querySelectorAll('.nav-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-
-            // 3. Afficher la section demandée
+            document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
+            document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
             document.getElementById(pageId).classList.add('active');
-
-            // 4. Mettre le bouton en surbrillance (Astuce simple)
             event.target.classList.add('active');
         }
 
-        // Petite horloge dynamique
+        // 2. Horloge
         setInterval(() => {
-            const now = new Date();
-            document.getElementById('horloge').textContent = now.toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
+            document.getElementById('horloge').textContent = new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
         }, 1000);
+
+        // 3. Calendrier Dynamique AVEC ÉVÉNEMENTS
+        function generateCalendar() {
+            const container = document.getElementById('calendar-container');
+            const title = document.getElementById('calendar-title');
+            
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth(); 
+            
+            // Noms des mois
+            const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
+            title.textContent = `Calendrier - ${monthNames[month]} ${year}`;
+
+            // Événements simulés (Jour : Texte)
+            const events = {
+                2: "Réunion IT",
+                5: "Audit Sécu",
+                10: "Formation",
+                13: "Déj Équipe",
+                20: "Comité",
+                27: "FIN SPRINT"
+            };
+
+            // En-têtes jours
+            const daysHead = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+            daysHead.forEach(day => {
+                const div = document.createElement('div');
+                div.className = 'cal-head';
+                div.textContent = day;
+                container.appendChild(div);
+            });
+
+            // Calculs jours
+            const firstDayOfMonth = new Date(year, month, 1).getDay(); 
+            const startOffset = (firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1); 
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            // Cases vides avant le 1er
+            for (let i = 0; i < startOffset; i++) {
+                const div = document.createElement('div');
+                div.className = 'cal-day empty';
+                container.appendChild(div);
+            }
+
+            // Jours du mois
+            for (let i = 1; i <= daysInMonth; i++) {
+                const div = document.createElement('div');
+                div.className = 'cal-day';
+                
+                // Contenu de la case (Numéro du jour)
+                let content = `<span>${i}</span>`;
+
+                // Si événement ce jour-là
+                if (events[i]) {
+                    div.classList.add('event');
+                    content += `<div class="event-label">${events[i]}</div>`;
+                }
+                
+                div.innerHTML = content;
+
+                // Vérifier si c'est aujourd'hui
+                if (i === now.getDate()) {
+                    div.classList.add('today');
+                }
+
+                container.appendChild(div);
+            }
+        }
+
+        // Lancer le calendrier au chargement
+        generateCalendar();
+
     </script>
 
 </body>
