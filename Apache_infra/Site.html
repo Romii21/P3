@@ -11,7 +11,7 @@
             --primary: #2E7D32;       /* Vert EcoTech */
             --primary-glow: #4caf50;  /* Vert lumineux */
             --bg-dark: #1b1f22;       /* Fond sombre */
-            --glass-bg: rgba(30, 30, 35, 0.90); /* Effet Verre (un peu plus opaque) */
+            --glass-bg: rgba(30, 30, 35, 0.90); /* Effet Verre */
             --glass-border: rgba(255, 255, 255, 0.1);
             --text: #ffffff;
             --text-muted: #b0b0b0;
@@ -23,23 +23,38 @@
         body {
             font-family: 'Source Sans Pro', sans-serif;
             background-color: var(--bg-dark);
-            /* background-image: url('images/bg.jpg'); */ /* Décommente si tu as une image */
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
             margin: 0; padding: 0;
             color: var(--text);
             height: 100vh;
             display: flex;
             flex-direction: column;
+            position: relative;
+            overflow: hidden; /* Important pour le watermark */
         }
 
-        /* Overlay sombre */
+        /* LOGO EN FOND (WATERMARK GÉANT) */
+        body::after {
+            content: "";
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vh; height: 80vh; /* Taille géante */
+            background-image: url('logo.png'); /* Ton logo */
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: contain;
+            opacity: 0.05; /* Transparence très faible (5%) pour ne pas gêner */
+            z-index: -1;
+            filter: grayscale(100%); /* Le rend gris pour être discret */
+            pointer-events: none;
+        }
+
+        /* Overlay sombre pour uniformiser */
         body::before {
             content: "";
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.6);
-            z-index: -1;
+            z-index: -2;
         }
 
         /* --- HEADER --- */
@@ -48,13 +63,15 @@
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--glass-border);
             padding: 0 30px;
-            height: 60px;
+            height: 70px; /* Un peu plus haut pour le logo */
             display: flex;
             justify-content: space-between;
             align-items: center;
             z-index: 100;
         }
-        .logo { font-size: 20px; font-weight: 300; color: var(--text); display: flex; align-items: center; gap: 10px; letter-spacing: 2px; text-transform: uppercase;}
+        /* Logo agrandi dans le header */
+        .logo { font-size: 22px; font-weight: 300; color: var(--text); display: flex; align-items: center; gap: 15px; letter-spacing: 2px; text-transform: uppercase;}
+        .logo img { height: 50px; width: auto; } /* Agrandissement du logo */
         .logo span { color: var(--text); font-weight: 600; border-bottom: 2px solid var(--primary); }
         
         .user-info { display: flex; align-items: center; gap: 15px; font-size: 13px; color: var(--text-muted); }
@@ -65,6 +82,7 @@
             display: flex;
             flex: 1;
             overflow: hidden;
+            z-index: 10; /* Au dessus du logo de fond */
         }
 
         /* --- SIDEBAR --- */
@@ -151,7 +169,7 @@
         .tag.secu { background: #ff9800; }
         .tag.biz { background: #009688; }
 
-        /* --- CALENDRIER DYNAMIQUE --- */
+        /* --- CALENDRIER --- */
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
@@ -171,7 +189,6 @@
         .cal-day.today { background: var(--primary); color: white; font-weight: bold; box-shadow: 0 0 15px rgba(46, 125, 50, 0.6); }
         .cal-day.empty { background: transparent; cursor: default; }
         
-        /* Texte de l'événement dans la case */
         .event-label {
             font-size: 9px; text-transform: uppercase; margin-top: 4px; color: var(--primary-glow); font-weight: bold; line-height: 1.2;
         }
@@ -204,6 +221,7 @@
             aside { width: 100%; height: auto; border-right: none; border-bottom: 1px solid var(--glass-border); padding: 10px; flex-direction: row; overflow-x: auto;}
             .dashboard-grid { grid-template-columns: 1fr; }
             .nav-btn { font-size: 12px; padding: 10px; white-space: nowrap;}
+            .logo img { height: 35px; } /* Plus petit sur mobile */
         }
     </style>
 </head>
@@ -211,12 +229,13 @@
 
     <header>
         <div class="logo">
-            <img src="logo.png" alt="" style="height:30px; margin-right:10px;"> EcoTech <span>Solutions</span>
+            <img src="logo.png" alt="EcoTech">
+            EcoTech <span>Solutions</span>
         </div>
         <div class="user-info">
             <span id="horloge">--:--</span>
             <span class="badge">INTRA</span>
-            <div style="width:30px; height:30px; border: 1px solid var(--text-muted); border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:12px;">R</div>
+            <div id="user-avatar" style="width:30px; height:30px; border: 1px solid var(--text-muted); border-radius:50%; display:flex; justify-content:center; align-items:center; font-size:12px;">?</div>
         </div>
     </header>
 
@@ -226,6 +245,7 @@
             <button class="nav-btn" onclick="showPage('planning')">Planning</button>
             <button class="nav-btn" onclick="showPage('documents')">Fichiers</button>
             <button class="nav-btn" onclick="showPage('support')">Support</button>
+            <div style="margin-top:auto; padding:10px; font-size:10px; color:#555; cursor:pointer;" onclick="resetUser()">Reset User</div>
         </aside>
 
         <main>
@@ -234,7 +254,7 @@
                 <div class="dashboard-grid">
                     <div>
                         <div class="card" style="border-left: 4px solid var(--primary);">
-                            <h1 style="margin:0; text-transform:uppercase; letter-spacing: 3px;">Bonjour, Romain</h1>
+                            <h1 id="welcome-title" style="margin:0; text-transform:uppercase; letter-spacing: 3px;">BONJOUR</h1>
                             <p>Bienvenue sur le portail interne. Votre dernière connexion date d'aujourd'hui.</p>
                         </div>
 
@@ -262,21 +282,6 @@
                                     <p>Nous sommes fiers d'annoncer la signature d'un contrat majeur avec GreenEnergy pour l'équipement de leurs datacenters.</p>
                                 </div>
                             </div>
-                            <div class="news-item">
-                                <div class="news-date">29<span>JAN</span></div>
-                                <div class="news-content">
-                                    <h4><span class="tag rh">RH</span> Campagne d'entretiens annuels</h4>
-                                    <p>Les entretiens annuels débuteront la semaine prochaine. Pensez à remplir votre grille d'auto-évaluation sur le portail RH.</p>
-                                </div>
-                            </div>
-                            <div class="news-item">
-                                <div class="news-date">25<span>JAN</span></div>
-                                <div class="news-content">
-                                    <h4><span class="tag secu">Sécurité</span> Campagne Anti-Phishing</h4>
-                                    <p>Attention aux emails frauduleux demandant vos mots de passe. La DSI ne vous demandera jamais votre mot de passe par email.</p>
-                                </div>
-                            </div>
-
                         </div>
                     </div>
 
@@ -342,9 +347,7 @@
             <div id="planning" class="page-section">
                 <div class="card">
                     <h2 id="calendar-title">Calendrier</h2>
-                    <p>Planning des événements et réservations de salles.</p>
-                    <div class="calendar-grid" id="calendar-container">
-                        </div>
+                    <div class="calendar-grid" id="calendar-container"></div>
                 </div>
             </div>
 
@@ -371,12 +374,6 @@
                             <td><a href="#">Ouvrir</a></td>
                         </tr>
                         <tr>
-                            <td>🖼️ Logo_EcoTech_Vectoriel.svg</td>
-                            <td>15/01/2026</td>
-                            <td>2.4 Mo</td>
-                            <td><a href="#">Ouvrir</a></td>
-                        </tr>
-                        <tr>
                             <td>🔐 Politique_Mots_De_Passe.pdf</td>
                             <td>10/01/2026</td>
                             <td>800 Ko</td>
@@ -389,21 +386,16 @@
             <div id="support" class="page-section">
                 <div class="card">
                     <h2>Nouveau Ticket</h2>
-                    <p>Utilisez ce formulaire pour signaler un incident technique.</p>
-                    <form onsubmit="alert('Ticket #4290 envoyé au support !'); return false;">
+                    <form onsubmit="alert('Ticket #4290 envoyé !'); return false;">
                         <div class="form-group">
                             <label>Service Concerné</label>
-                            <select><option>Infra / Réseau</option><option>Poste de travail</option><option>Logiciel Métier</option></select>
+                            <select><option>Infra / Réseau</option><option>Poste de travail</option></select>
                         </div>
                         <div class="form-group">
-                            <label>Priorité</label>
-                            <select><option>Normale</option><option>Urgente</option><option style="color:#ef5350;">Critique (Bloquant)</option></select>
+                            <label>Description</label>
+                            <textarea rows="4"></textarea>
                         </div>
-                        <div class="form-group">
-                            <label>Description de l'incident</label>
-                            <textarea rows="4" placeholder="Détaillez le problème (message d'erreur, logiciel concerné...)..."></textarea>
-                        </div>
-                        <button type="submit" class="btn-submit">Soumettre le ticket</button>
+                        <button type="submit" class="btn-submit">Soumettre</button>
                     </form>
                 </div>
             </div>
@@ -412,7 +404,6 @@
     </div>
 
     <script>
-        // 1. Navigation entre les pages
         function showPage(pageId) {
             document.querySelectorAll('.page-section').forEach(sec => sec.classList.remove('active'));
             document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('active'));
@@ -420,36 +411,49 @@
             event.target.classList.add('active');
         }
 
-        // 2. Horloge
         setInterval(() => {
             document.getElementById('horloge').textContent = new Date().toLocaleTimeString('fr-FR', {hour: '2-digit', minute:'2-digit'});
         }, 1000);
 
-        // 3. Calendrier Dynamique AVEC ÉVÉNEMENTS
+        // --- GESTION UTILISATEUR DYNAMIQUE ---
+        function checkUser() {
+            // On regarde si un nom est déjà sauvegardé
+            let user = localStorage.getItem('ecoTechUser');
+            
+            // Si pas de nom, on demande (une seule fois)
+            if (!user) {
+                user = prompt("Bienvenue sur l'Intranet EcoTech.\nVeuillez entrer votre prénom pour la session :", "Romain");
+                if (user) {
+                    localStorage.setItem('ecoTechUser', user);
+                } else {
+                    user = "Collaborateur"; // Valeur par défaut si annulation
+                }
+            }
+            
+            // Mise à jour de l'affichage
+            document.getElementById('welcome-title').innerText = "BONJOUR, " + user.toUpperCase();
+            document.getElementById('user-avatar').innerText = user.charAt(0).toUpperCase();
+        }
+
+        // Fonction pour changer d'utilisateur (bouton caché en bas à gauche)
+        function resetUser() {
+            localStorage.removeItem('ecoTechUser');
+            location.reload();
+        }
+
+        // --- CALENDRIER ---
         function generateCalendar() {
             const container = document.getElementById('calendar-container');
             const title = document.getElementById('calendar-title');
-            
             const now = new Date();
             const year = now.getFullYear();
             const month = now.getMonth(); 
-            
-            // Noms des mois
             const monthNames = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"];
             title.textContent = `Calendrier - ${monthNames[month]} ${year}`;
-
-            // Événements simulés (Jour : Texte)
-            const events = {
-                2: "Réunion IT",
-                5: "Audit Sécu",
-                10: "Formation",
-                13: "Déj Équipe",
-                20: "Comité",
-                27: "FIN SPRINT"
-            };
-
-            // En-têtes jours
+            
+            const events = { 2: "Réunion IT", 5: "Audit Sécu", 10: "Formation", 13: "Déj Équipe", 20: "Comité", 27: "FIN SPRINT" };
             const daysHead = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
+            
             daysHead.forEach(day => {
                 const div = document.createElement('div');
                 div.className = 'cal-head';
@@ -457,44 +461,29 @@
                 container.appendChild(div);
             });
 
-            // Calculs jours
             const firstDayOfMonth = new Date(year, month, 1).getDay(); 
             const startOffset = (firstDayOfMonth === 0 ? 6 : firstDayOfMonth - 1); 
             const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-            // Cases vides avant le 1er
             for (let i = 0; i < startOffset; i++) {
                 const div = document.createElement('div');
                 div.className = 'cal-day empty';
                 container.appendChild(div);
             }
 
-            // Jours du mois
             for (let i = 1; i <= daysInMonth; i++) {
                 const div = document.createElement('div');
                 div.className = 'cal-day';
-                
-                // Contenu de la case (Numéro du jour)
                 let content = `<span>${i}</span>`;
-
-                // Si événement ce jour-là
-                if (events[i]) {
-                    div.classList.add('event');
-                    content += `<div class="event-label">${events[i]}</div>`;
-                }
-                
+                if (events[i]) { div.classList.add('event'); content += `<div class="event-label">${events[i]}</div>`; }
                 div.innerHTML = content;
-
-                // Vérifier si c'est aujourd'hui
-                if (i === now.getDate()) {
-                    div.classList.add('today');
-                }
-
+                if (i === now.getDate()) { div.classList.add('today'); }
                 container.appendChild(div);
             }
         }
 
-        // Lancer le calendrier au chargement
+        // Lancement au démarrage
+        checkUser();
         generateCalendar();
 
     </script>
